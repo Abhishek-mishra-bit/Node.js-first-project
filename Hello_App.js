@@ -1,16 +1,10 @@
-const fs = require("fs");
-fs.writeFileSync("Hello.txt", "Hello from Node.js");
+const http = require("http");
 
-const addFun = (a, b) => a + b;
-console.log(addFun(3, 4));
+const server = http.createServer((req, res) => {
+  res.end("My name is Abhishek");
+});
 
-const Student = {
-  name: "Abhishek",
-  age: 20,
-  grade: 9,
-  greet() {
-    console.log(`Hii, I am ${Student.name}`);
-  },
-};
-
-Student.greet();
+const port = 3000; // Change the port number to 3000 or any other available port
+server.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
