@@ -1,62 +1,46 @@
 const http = require("http");
+const fs = require("fs");
 
 const server = http.createServer((req, res) => {
-  let path = req.url.replace(/\/?(?:\?.*)?$/, "").toLowerCase();
-  switch (path) {
-    case "":
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(`<!DOCTYPE html>
-      <html>
-        <head>
-          <title>My Website</title>
-        </head>      
-        <body>
-        <h1>Welcome to My Website</h1>
-        </body>`);
+  console.log(req.url);
 
-      break;
-    case "/home":
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(`<!DOCTYPE html>
-        <html>
-          <head>
-            <title>My Website</title>
-          </head>
-          <body><h1>Welcome to home</h1></body>`);
-      break;
-    case "/about":
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(`<!DOCTYPE html>
-        <html>
-          <head>
-            <title>My Website</title>
-          </head>      
-          <body>
-          <h1>Welcome to My About us page</h1>
-          </body>`);
-      break;
-    case "/node":
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(`<!DOCTYPE html>
-        <html>
-          <head>
-            <title>My Website</title>
-          </head>      
-          <body>
-          <h1>Welcome to My Node.js project</h1>
-          </body>`);
-      break;
-    default:
-      res.writeHead(404, { "Content-Type": "text/html" });
-      res.end(`<!DOCTYPE html>
-        <html>
-          <head>
-            <title>My Website</title>
-          </head>      
-          <body>
-          <h1>Not Found</h1>
-          </body>`);
-      break;
+  let path = req.url;
+  const method = req.method;
+  if (path === "/") {
+    fs.readFile("message.txt", { encoding: "utf8" }, (err, data) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log("data from file: " + data);
+      res.setHeader("Content-Type", "text/html");
+      res.write("<html>");
+      res.write("<head><title>My Website</title><head>");
+      res.write(`<body>${data}</body>`);
+      res.write(
+        "<body><form action='/message' method='POST'><input type='text' name='message'/><button type='submit'>SEND</button></form></body>"
+      );
+      res.write(`</html>`);
+      return res.end();
+    });
+  }
+  if (path === "/message" && method === "POST") {
+    let body = [];
+    req.on("data", (chunk) => {
+      body.push(chunk);
+    });
+    req.on("end", () => {
+      const parseBody = Buffer.concat(body).toString();
+      console.log("parseBody", parseBody);
+
+      const message = parseBody.split("=")[1];
+      fs.writeFile("message.txt", message, (err) => {
+        console.log("indise fs.writeFile");
+
+        res.statusCode = 302;
+        res.setHeader("Location", "/");
+        return res.end();
+      });
+    });
   }
 });
 
