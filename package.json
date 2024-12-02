@@ -1,0 +1,15 @@
+{
+  "name": "node-js-project",
+  "version": "1.0.0",
+  "description": "learning node.js",
+  "main": "Hello_App.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon Hello_App.js"
+  },
+  "author": "abhishek mishra",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

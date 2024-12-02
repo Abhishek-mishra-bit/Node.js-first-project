@@ -28,9 +28,11 @@ const requestHandler = (req, res) => {
     });
     req.on("end", () => {
       const parseBody = Buffer.concat(body).toString();
+      console.log(parseBody);
+
       console.log("parseBody", parseBody);
 
-      const message = parseBody.split("=")[1];
+      const message = parseBody.split("=")[0];
       fs.writeFile("message.txt", message, (err) => {
         console.log("indise fs.writeFile");
 
