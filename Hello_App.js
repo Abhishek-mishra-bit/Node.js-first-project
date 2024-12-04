@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const adminRoutes = require("./routes/admin"); // Importing the router file
 const shopRoutes = require("./routes/shop"); // Importing the shop file
 const loginRoutes = require("./routes/login"); //
+const contactRoutes = require("./routes/contactUs"); // Importing
 const app = express();
 const path = require("path");
 const rootDir = require("./utils/path");
@@ -12,6 +13,7 @@ app.use(express.static(path.join(rootDir, "public")));
 
 // Use the admin routes with "/admin" prefix
 app.use("/admin", adminRoutes);
+app.use(contactRoutes);
 
 // Use the shop routes
 app.use(shopRoutes);
