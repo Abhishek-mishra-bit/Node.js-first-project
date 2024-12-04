@@ -1,26 +1,21 @@
 const express = require("express");
 const fs = require("fs");
 const router = express.Router();
+const path = require("path");
 // const app = express();
 // app.use(express.urlencoded({ extended: true }));
 
-router.get("/", (req, res) => {
+router.get("/message", (req, res) => {
   fs.readFile("username.txt", (err, data) => {
     if (err) {
       console.log(err);
       data = "No chat exist";
     }
-    res.send(
-      `${data}<form action="/" method="POST" onSubmit="document.getElementById('username').value = localStorage.getItem('username')">
-                <input type="text" name="message" id="message">
-                <input type="hidden" name="username" id="username">
-                <br />
-                <button type="submit">Send</button>
-            </form>`
-    );
+
+    res.sendFile(path.join(__dirname, "..", "views", "message.html"));
   });
 });
-router.post("/", (req, res) => {
+router.post("/message", (req, res) => {
   if (req.body.username && req.body.message) {
     fs.writeFile(
       "username.txt",
@@ -29,17 +24,11 @@ router.post("/", (req, res) => {
       (err) => (err ? console.log(err) : null)
     );
   }
-  res.redirect("/");
+  res.redirect("/message");
 });
 router.get("/login", (req, res) => {
-  res.send(
-    `<form action="/login" method="POST" onSubmit="localStorage.setItem('username', document.getElementById('username').value)">
-        <input type="text" name="username" placeholder="username" id="username">
-        <br />
-        <button type="submit">Login</button>
-    </form>`
-  );
+  res.sendFile(path.join(__dirname, "..", "views", "login.html"));
 });
-router.post("/login", (req, res) => res.redirect("/"));
+router.post("/login", (req, res) => res.redirect("/message"));
 
 module.exports = router;

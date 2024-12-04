@@ -1,10 +1,11 @@
 const express = require("express");
+const path = require("path");
 
 const router = express.Router();
-// Middleware to parse URL-encoded form data
 
+const rootDir = require("../utils/path");
 router.get("/", (req, res, next) => {
-  res.send("<h1>This is my first web page</h1>");
+  res.sendFile(path.join(__dirname, "../", "views", "shop.html"));
 });
 
 module.exports = router;
